@@ -1,0 +1,101 @@
+html,
+body {
+  height: 100%;
+  /* The html and body elements cannot have any padding or margin. */
+}
+
+#title {
+  color: #fff;
+}
+
+/* Wrapper for page content to push down footer */
+#wrap {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  /* Negative indent footer by its height */
+  margin: 0 auto -50px;
+  /* Pad bottom by footer height */
+  padding: 50px 0 0 50px;
+}
+
+#footer {
+  /* Set the fixed height of the footer here */
+  height: 25px;
+  background-color: #080808;
+  margin-top: 15px;
+}
+
+/* apply responsive CSS fixes as necessary */
+@media (max-width: 767px) {
+  #footer {
+    margin-left: -20px;
+    margin-right: -20px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+#wrap > .container-fluid {
+  padding: 60px 15px 10px;
+}
+
+#footer > .container-fluid {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+#footer p {
+  margin-bottom: 0;
+}
+
+.has-error {
+  color: #a94442;
+}
+
+.app-container {
+  padding-top: 80px;
+}
+
+.books-table {
+  border: 2px solid #3d3c3c;
+}
+.books-table thead {
+  background-color: rgb(182, 223, 209);
+}
+.books-table thead tr th {
+  border: 1px solid #3d3c3c;
+  text-align: center;
+}
+.books-table tr {
+  border: 2px solid #3d3c3c;
+}
+.books-table td {
+  text-align: center;
+}
+
+.btncontainer {
+  padding: 20px 40px 20px 0;
+}
+
+.tableAction {
+  color: #7e3635;
+  cursor: pointer;
+}
+
+.tableAction:hover {
+  color: #1a5aad;
+  cursor: pointer;
+}
+
+.mr15 {
+  margin-right: 15px;
+}
+
+.mr10 {
+  margin-right: 10px;
+}
+
+.ml10 {
+  margin-left: 10px;
+}
