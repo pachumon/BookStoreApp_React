@@ -1,0 +1,39 @@
+{
+  "books": [
+    {
+      "title": "Angularjs",
+      "author": "john papa",
+      "published": 2013,
+      "category": "Information Technology",
+      "id": 1
+    },
+    {
+      "id": 2,
+      "title": "Angular",
+      "author": "Steve Richards",
+      "published": 2016,
+      "category": "Information Technology"
+    },
+    {
+      "id": 3,
+      "title": "ReactJs",
+      "author": "Steven Peters",
+      "published": 2014,
+      "category": "Information Technology"
+    },
+    {
+      "id": 4,
+      "title": "Wings Of Fire",
+      "author": "APJ Abdul Kalam",
+      "published": 2010,
+      "category": "Biography"
+    },
+    {
+      "id": 5,
+      "title": "Tale of Two Cities",
+      "author": "Charles Dickens",
+      "published": 1943,
+      "category": "Historical Fiction"
+    }
+  ]
+}

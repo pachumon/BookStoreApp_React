@@ -1,10 +1,13 @@
 import React from 'react';
-
+import Home from '../home/Home.component';
+import BookDetails from '../book-details/BookDetails.component';
+import BookActions from '../book-actions/BookActions.components';
+import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import './App.css';
 
 function App() {
   return (
-    <>
+    <Router>
       <nav className="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div className="container-fluid">
           <div className="navbar-header">
@@ -37,8 +40,12 @@ function App() {
         </div>
       </nav>
       <div className="container-fluid mr-10 app-container">
-        the router content goes here
-        <i className="fa fa-chevron-right ml10" />
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route path="/bookDetails/:bookId" component={BookDetails} />
+          <Route path="/bookActions/:bookId" component={BookActions} />
+          {/*<Route component={NoMatch} /> */}
+        </Switch>
       </div>
 
       <div id="footer" className="navbar-fixed-bottom">
@@ -47,7 +54,7 @@ function App() {
           <p className="text-center text-muted" />
         </div>
       </div>
-    </>
+    </Router>
   );
 }
 
