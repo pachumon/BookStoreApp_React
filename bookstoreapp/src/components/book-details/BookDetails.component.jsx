@@ -3,37 +3,47 @@ import { Link, Route } from 'react-router-dom';
 import { InvokeHttp } from '../../httpUtils/AjaxGateway';
 import { get } from 'lodash';
 import BookDetailsRow from './BookDetailsRow.component';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as bookInfoActions from '../../actions/bookInfoActions';
 
 class BookDetails extends Component {
   state = { bookInfo: {} };
+ 
   componentDidMount = () => {
+    
+
     const bookId = get(this.props, 'match.params.bookId');
-    InvokeHttp(
-      { method: 'GET', url: `http://localhost:3600/books/${bookId}` },
-      (response) => {
-        this.setState({ bookInfo: { ...response } });
-      }
-    );
+    this.props.actions.loadBookInfoAsync(bookId);
+    // InvokeHttp(
+    //   { method: 'GET', url: `http://localhost:3600/books/${bookId}` },
+    //   response => {
+    //     this.setState({ bookInfo: { ...response } });
+    //   }
+    // );
   };
 
   render() {
-    const { bookInfo } = this.state;
+    console.log(this);
+
+    const { bookInfo } = this.props;
+    console.log(bookInfo);
     return (
       <div className="container-fluid">
-        {get(bookInfo, 'title') != undefined && (
+        {get(bookInfo.data, 'title') != undefined && (
           <div className="row">
             <div className="panel panel-primary">
               <div className="panel-heading">
-                Book Details&nbsp;:&nbsp;{bookInfo.title}
+                Book Details&nbsp;:&nbsp;{bookInfo.data.title}
               </div>
               <div className="panel-body">
-                <BookDetailsRow label="Title" content={bookInfo.title} />
-                <BookDetailsRow label="Author" content={bookInfo.author} />
+                <BookDetailsRow label="Title" content={bookInfo.data.title} />
+                <BookDetailsRow label="Author" content={bookInfo.data.author} />
                 <BookDetailsRow
                   label="Published"
-                  content={bookInfo.published}
+                  content={bookInfo.data.published}
                 />
-                <BookDetailsRow label="Category" content={bookInfo.category} />
+                <BookDetailsRow label="Category" content={bookInfo.data.category} />
               </div>
             </div>
           </div>
@@ -49,4 +59,15 @@ class BookDetails extends Component {
   }
 }
 
-export default BookDetails;
+const mapStateToProps = (state, props) => {  
+  return { bookInfo: state.bookInfo };
+};
+
+const mapDispatchToProps = dispatch => {  
+  return { actions: bindActionCreators(bookInfoActions, dispatch) };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(BookDetails);

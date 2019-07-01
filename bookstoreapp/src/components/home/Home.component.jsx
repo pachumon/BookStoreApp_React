@@ -2,41 +2,35 @@ import React, { Component } from 'react';
 import HomeTable from './HomeTable.component';
 import { InvokeHttp } from '../../httpUtils/AjaxGateway';
 import { ToastContainer } from 'react-toastr';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as bookActions from '../../actions/booksActions';
 
-export default class Home extends Component {
+class Home extends Component {
   state = { books: [] };
   container;
 
-  componentWillMount = () => {
-    this.loadBookData();
-  };
-
   componentWillUpdate = (nextProps, nextState) => {};
 
-  loadBookData = () => {
-    InvokeHttp(
-      { method: 'GET', url: `http://localhost:3600/books` },
-      response => this.setState({ books: [...response] })
-    );
-  };
-
   removeBookInfo = bookID => {
-    console.log(bookID);
-    InvokeHttp(
-      {
-        method: 'DELETE',
-        url: `http://localhost:3600/books/${bookID}`
-      },
-      response => {
-        this.container.success(`Book has been Removed`, ``, {
-          closeButton: true
-        });
-        this.loadBookData();
-      }
-    );
+    // console.log(bookID);
+    // InvokeHttp(
+    //   {
+    //     method: 'DELETE',
+    //     url: `http://localhost:3600/books/${bookID}`
+    //   },
+    //   response => {
+    //     this.container.success(`Book has been Removed`, ``, {
+    //       closeButton: true
+    //     });
+    //     this.loadBookData();
+    //   }
+    // );
   };
 
   render() {
+    const { books } = this.props;
+    //console.log(bookActions);
     return (
       <>
         <div className="container-fluid">
@@ -50,14 +44,27 @@ export default class Home extends Component {
               <i className="fa fa-chevron-right ml10" />
             </a>
           </div>
-          {this.state.books.length > 0 && (
-            <HomeTable
-              books={this.state.books}
-              removeAction={this.removeBookInfo}
-            />
+          {books.data.length > 0 && (
+            <HomeTable books={books.data} removeAction={this.removeBookInfo} />
+          )}
+          {books.errorInfo !== '' && (
+            <div className="row text-center bold">{books.errorInfo}</div>
           )}
         </div>
       </>
     );
   }
 }
+
+const mapStateToProps = (state, props) => {
+  return { books: state.books };
+};
+
+const mapDispatchToProps = dispatch => {
+  return { actions: bindActionCreators(bookActions, dispatch) };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Home);
