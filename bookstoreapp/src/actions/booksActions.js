@@ -9,22 +9,44 @@ const loadBooksError = errMessage => {
   return { type: actionTypes.LOAD_BOOKS_ERROR, errMessage };
 };
 
-const clearStaleStateData = errMessage => {
-  return { type: actionTypes.CLEAR_STALE_STATE_DATA };
+const removeBookInfoSuccess = bookId => {
+  return { type: actionTypes.REMOVE_BOOKINFO_SUCCESS, bookId };
 };
 
-const loadBooksAsync = () => {
-  console.log('invoked loadBooksAsync');
+const removeBookInfoError = errMessage => {
+  return { type: actionTypes.REMOVE_BOOKINFO_ERROR, errMessage };
+};
+
+const loadBooks = () => {
+  console.log('invoked loadBooks');
   return (dispatch, appState) => {
     InvokeHttp(
       { method: 'GET', url: `http://localhost:3600/books` },
       response => {
         dispatch(loadBooksSuccess(response));
       },
-      err =>
-        dispatch(loadBooksError(`could not retrieve data, please try again`))
+      err => {
+        dispatch(loadBooksError(`could not retrieve data, please try again`));
+      }
     );
   };
 };
 
-export { loadBooksAsync };
+const removeBookInfo = bookId => {
+  console.log('invoked removeBookInfo');
+  return (dispatch, appState) => {
+    InvokeHttp(
+      { method: 'DELETE', url: `http://localhost:3600/books/${bookId}` },
+      response => {
+        dispatch(removeBookInfoSuccess(bookId));
+      },
+      err => {
+        dispatch(
+          removeBookInfoError(`could not remove bookInfo, please try again`)
+        );
+      }
+    );
+  };
+};
+
+export { loadBooks, removeBookInfo };

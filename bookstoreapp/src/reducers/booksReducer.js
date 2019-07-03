@@ -4,9 +4,14 @@ import initialState from './initialState';
 const booksReducer = (state = initialState.books, action) => {
   switch (action.type) {
     case actionTypes.LOAD_BOOKS_SUCCESS:
-      return { ...state, data: [...action.books] };    
+      return { ...state, data: [...action.books] };
     case actionTypes.LOAD_BOOKS_ERROR:
-      return { ...state, errorInfo: action.errMessage };    
+      return { ...state, errorInfo: action.errMessage };
+    case actionTypes.REMOVE_BOOKINFO_SUCCESS: {
+      debugger;
+      var filteredBooks = state.data.filter(book => book.id !== action.bookId);
+      return { ...state, data: [...action.books] };
+    }
     default:
       return state;
   }

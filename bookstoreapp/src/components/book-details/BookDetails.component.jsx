@@ -9,23 +9,14 @@ import * as bookInfoActions from '../../actions/bookInfoActions';
 
 class BookDetails extends Component {
   state = { bookInfo: {} };
- 
-  componentDidMount = () => {
-    
 
+  componentDidMount = () => {
     const bookId = get(this.props, 'match.params.bookId');
+    this.props.actions.clearStaleBookInfoData();
     this.props.actions.loadBookInfoAsync(bookId);
-    // InvokeHttp(
-    //   { method: 'GET', url: `http://localhost:3600/books/${bookId}` },
-    //   response => {
-    //     this.setState({ bookInfo: { ...response } });
-    //   }
-    // );
   };
 
   render() {
-    console.log(this);
-
     const { bookInfo } = this.props;
     console.log(bookInfo);
     return (
@@ -43,7 +34,10 @@ class BookDetails extends Component {
                   label="Published"
                   content={bookInfo.data.published}
                 />
-                <BookDetailsRow label="Category" content={bookInfo.data.category} />
+                <BookDetailsRow
+                  label="Category"
+                  content={bookInfo.data.category}
+                />
               </div>
             </div>
           </div>
@@ -59,11 +53,11 @@ class BookDetails extends Component {
   }
 }
 
-const mapStateToProps = (state, props) => {  
+const mapStateToProps = (state, props) => {
   return { bookInfo: state.bookInfo };
 };
 
-const mapDispatchToProps = dispatch => {  
+const mapDispatchToProps = dispatch => {
   return { actions: bindActionCreators(bookInfoActions, dispatch) };
 };
 

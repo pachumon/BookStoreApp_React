@@ -7,11 +7,11 @@ import App from './components/app/App.component';
 import configureStore from './store/configureStore';
 import initialState from './reducers/initialState';
 import { Provider } from 'react-redux';
-import { loadBooks,loadBooksAsync } from './actions/booksActions';
+//import { loadBooks, loadBooksAsync } from './actions/booksActions';
 
 var store = configureStore(initialState);
 //console.log(actionTypes());
-store.dispatch(loadBooksAsync());
+// store.dispatch(loadBooksAsync());
 
 ReactDOM.render(
   <Provider store={store}>

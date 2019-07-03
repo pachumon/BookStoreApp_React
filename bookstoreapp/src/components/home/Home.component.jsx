@@ -7,25 +7,17 @@ import { bindActionCreators } from 'redux';
 import * as bookActions from '../../actions/booksActions';
 
 class Home extends Component {
-  state = { books: [] };
   container;
+
+  componentDidMount() {
+    console.log(this);
+    this.props.actions.loadBooks();
+  }
 
   componentWillUpdate = (nextProps, nextState) => {};
 
   removeBookInfo = bookID => {
-    // console.log(bookID);
-    // InvokeHttp(
-    //   {
-    //     method: 'DELETE',
-    //     url: `http://localhost:3600/books/${bookID}`
-    //   },
-    //   response => {
-    //     this.container.success(`Book has been Removed`, ``, {
-    //       closeButton: true
-    //     });
-    //     this.loadBookData();
-    //   }
-    // );
+    this.props.actions.removeBookInfo(bookID);
   };
 
   render() {
