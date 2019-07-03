@@ -14,7 +14,7 @@ const clearStaleBookInfoData = errMessage => {
 };
 
 const loadBookInfoAsync = bookId => {
-  console.log('invoked loadBookInfoAsync');
+  console.log('invoked loadBookInfoAsync'); 
 
   return (dispatch, appState) => {
     InvokeHttp(

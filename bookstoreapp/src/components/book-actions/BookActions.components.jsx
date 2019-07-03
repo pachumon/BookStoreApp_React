@@ -5,8 +5,11 @@ import { InvokeHttp } from '../../httpUtils/AjaxGateway';
 import { Formik, ErrorMessage } from 'formik';
 import { ToastContainer } from 'react-toastr';
 import * as Yup from 'yup';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as bookInfoActions from '../../actions/bookInfoActions';
 
-export default class BookActions extends Component {
+class BookActions extends Component {
   defaultState = {
     id: 0,
     title: '',
@@ -56,24 +59,22 @@ export default class BookActions extends Component {
     }
   };
 
+  componentWillUpdate = () => {
+    console.log(this.props);
+  };
+
   componentDidMount = () => {
     const bookId = get(this.props, 'match.params.bookId');
+    this.props.actions.clearStaleBookInfoData();
+
     if (bookId !== '0') {
-      InvokeHttp(
-        {
-          method: 'GET',
-          url: `http://localhost:3600/books/${bookId}`
-        },
-        response => {
-          console.log(response);
-          this.defaultState = { ...response };
-          this.setState({ bookInfo: { ...response } });
-        }
-      );
+      this.props.actions.loadBookInfoAsync(bookId);
     }
   };
 
   render() {
+    console.log(this.props);
+    const { bookInfo } = this.props;
     return (
       <div className="container-fluid">
         <ToastContainer
@@ -83,202 +84,205 @@ export default class BookActions extends Component {
         <div className="row">
           <div className="panel panel-primary">
             <div className="panel-heading">
-              {this.state.bookInfo.id === 0
+              {bookInfo.data.id === 0
                 ? 'Add New Book'
-                : 'Editing Book : ' + this.state.bookInfo.title}
+                : 'Editing Book : ' + bookInfo.data.title}
             </div>
             <div className="panel-body">
-              <Formik
-                initialValues={this.state.bookInfo}
-                enableReinitialize={true}
-                validationSchema={Yup.object({
-                  title: Yup.string().required('title is required'),
-                  author: Yup.string().required('author is required'),
-                  published: Yup.string().required('published is required'),
-                  category: Yup.string().required('category is required')
-                })}
-                onSubmit={(values, { setSubmitting }) => {
-                  this.handleFormSubmit(values, setSubmitting);
-                }}
-              >
-                {({
-                  values,
-                  errors,
-                  touched,
-                  handleChange,
-                  handleBlur,
-                  isSubmitting,
-                  handleSubmit,
-                  resetForm
-                }) => (
-                  <>
-                    <form className="form-horizontal" onSubmit={handleSubmit}>
-                      <div
-                        className={`form-group ${errors.title !== undefined &&
-                          touched.title !== undefined &&
-                          'has-error'}`}
-                      >
-                        <label
-                          htmlFor="title"
-                          className="col-sm-2 control-label"
+              {bookInfo.data.id !== undefined && (
+                <Formik
+                  initialValues={bookInfo.data}
+                  enableReinitialize={true}
+                  validationSchema={Yup.object({
+                    title: Yup.string().required('title is required'),
+                    author: Yup.string().required('author is required'),
+                    published: Yup.string().required('published is required'),
+                    category: Yup.string().required('category is required')
+                  })}
+                  onSubmit={(values, { setSubmitting }) => {
+                    this.handleFormSubmit(values, setSubmitting);
+                  }}
+                >
+                  {({
+                    values,
+                    errors,
+                    touched,
+                    handleChange,
+                    handleBlur,
+                    isSubmitting,
+                    handleSubmit,
+                    resetForm
+                  }) => (
+                    <>
+                      <form className="form-horizontal" onSubmit={handleSubmit}>
+                        <div
+                          className={`form-group ${errors.title !== undefined &&
+                            touched.title !== undefined &&
+                            'has-error'}`}
                         >
-                          Title :
-                        </label>
-                        <div>
-                          <div className="col-sm-6">
-                            <input
-                              className="form-control"
-                              type="text"
-                              name="title"
-                              value={values.title}
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                            />
-                          </div>
-                          <div className="col-sm-4">
-                            <ErrorMessage name="title">
-                              {msg => (
-                                <span
-                                  className="alert alert-danger"
-                                  style={{ padding: '5px' }}
-                                >
-                                  <span>{msg}</span>
-                                </span>
-                              )}
-                            </ErrorMessage>
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        className={`form-group ${errors.author !== undefined &&
-                          touched.author !== undefined &&
-                          'has-error'}`}
-                      >
-                        <label
-                          htmlFor="author"
-                          className="col-sm-2 control-label"
-                        >
-                          Author :
-                        </label>
-                        <div>
-                          <div className="col-sm-6">
-                            <input
-                              className="form-control"
-                              type="text"
-                              name="author"
-                              value={values.author}
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                            />
-                          </div>
-                          <div className="col-sm-4">
-                            <ErrorMessage name="author">
-                              {msg => (
-                                <span
-                                  className="alert alert-danger"
-                                  style={{ padding: '5px' }}
-                                >
-                                  <span>{msg}</span>
-                                </span>
-                              )}
-                            </ErrorMessage>
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        className={`form-group ${errors.published !==
-                          undefined &&
-                          touched.published !== undefined &&
-                          'has-error'}`}
-                      >
-                        <label
-                          htmlFor="published"
-                          className="col-sm-2 control-label"
-                        >
-                          Published :
-                        </label>
-                        <div>
-                          <div className="col-sm-6">
-                            <input
-                              className="form-control"
-                              type="text"
-                              name="published"
-                              value={values.published}
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                            />
-                          </div>
-                          <div className="col-sm-4">
-                            <ErrorMessage name="published">
-                              {msg => (
-                                <span
-                                  className="alert alert-danger"
-                                  style={{ padding: '5px' }}
-                                >
-                                  <span>{msg}</span>
-                                </span>
-                              )}
-                            </ErrorMessage>
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        className={`form-group ${errors.category !==
-                          undefined &&
-                          touched.category !== undefined &&
-                          'has-error'}`}
-                      >
-                        <label
-                          htmlFor="category"
-                          className="col-sm-2 control-label"
-                        >
-                          Category :
-                        </label>
-                        <div>
-                          <div className="col-sm-6">
-                            <input
-                              className="form-control"
-                              type="text"
-                              name="category"
-                              value={values.category}
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                            />
-                          </div>
-                          <div className="col-sm-4">
-                            <ErrorMessage name="category">
-                              {msg => (
-                                <span
-                                  className="alert alert-danger"
-                                  style={{ padding: '5px' }}
-                                >
-                                  <span>{msg}</span>
-                                </span>
-                              )}
-                            </ErrorMessage>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="form-group">
-                        <div className="col-sm-offset-3 col-sm-10">
-                          <input
-                            type="submit"
-                            className="btn btn-primary"
-                            value="Submit"
-                            disabled={isSubmitting}
-                          />
-                          <a
-                            className="col-sm-offset-1 btn btn-primary"
-                            onClick={() => resetForm(this.defaultState)}
+                          <label
+                            htmlFor="title"
+                            className="col-sm-2 control-label"
                           >
-                            Reset
-                          </a>
+                            Title :
+                          </label>
+                          <div>
+                            <div className="col-sm-6">
+                              <input
+                                className="form-control"
+                                type="text"
+                                name="title"
+                                value={values.title}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                              />
+                            </div>
+                            <div className="col-sm-4">
+                              <ErrorMessage name="title">
+                                {msg => (
+                                  <span
+                                    className="alert alert-danger"
+                                    style={{ padding: '5px' }}
+                                  >
+                                    <span>{msg}</span>
+                                  </span>
+                                )}
+                              </ErrorMessage>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </form>
-                  </>
-                )}
-              </Formik>
+                        <div
+                          className={`form-group ${errors.author !==
+                            undefined &&
+                            touched.author !== undefined &&
+                            'has-error'}`}
+                        >
+                          <label
+                            htmlFor="author"
+                            className="col-sm-2 control-label"
+                          >
+                            Author :
+                          </label>
+                          <div>
+                            <div className="col-sm-6">
+                              <input
+                                className="form-control"
+                                type="text"
+                                name="author"
+                                value={values.author}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                              />
+                            </div>
+                            <div className="col-sm-4">
+                              <ErrorMessage name="author">
+                                {msg => (
+                                  <span
+                                    className="alert alert-danger"
+                                    style={{ padding: '5px' }}
+                                  >
+                                    <span>{msg}</span>
+                                  </span>
+                                )}
+                              </ErrorMessage>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          className={`form-group ${errors.published !==
+                            undefined &&
+                            touched.published !== undefined &&
+                            'has-error'}`}
+                        >
+                          <label
+                            htmlFor="published"
+                            className="col-sm-2 control-label"
+                          >
+                            Published :
+                          </label>
+                          <div>
+                            <div className="col-sm-6">
+                              <input
+                                className="form-control"
+                                type="text"
+                                name="published"
+                                value={values.published}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                              />
+                            </div>
+                            <div className="col-sm-4">
+                              <ErrorMessage name="published">
+                                {msg => (
+                                  <span
+                                    className="alert alert-danger"
+                                    style={{ padding: '5px' }}
+                                  >
+                                    <span>{msg}</span>
+                                  </span>
+                                )}
+                              </ErrorMessage>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          className={`form-group ${errors.category !==
+                            undefined &&
+                            touched.category !== undefined &&
+                            'has-error'}`}
+                        >
+                          <label
+                            htmlFor="category"
+                            className="col-sm-2 control-label"
+                          >
+                            Category :
+                          </label>
+                          <div>
+                            <div className="col-sm-6">
+                              <input
+                                className="form-control"
+                                type="text"
+                                name="category"
+                                value={values.category}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                              />
+                            </div>
+                            <div className="col-sm-4">
+                              <ErrorMessage name="category">
+                                {msg => (
+                                  <span
+                                    className="alert alert-danger"
+                                    style={{ padding: '5px' }}
+                                  >
+                                    <span>{msg}</span>
+                                  </span>
+                                )}
+                              </ErrorMessage>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="form-group">
+                          <div className="col-sm-offset-3 col-sm-10">
+                            <input
+                              type="submit"
+                              className="btn btn-primary"
+                              value="Submit"
+                              disabled={isSubmitting}
+                            />
+                            <a
+                              className="col-sm-offset-1 btn btn-primary"
+                              onClick={() => resetForm(this.defaultState)}
+                            >
+                              Reset
+                            </a>
+                          </div>
+                        </div>
+                      </form>
+                    </>
+                  )}
+                </Formik>
+              )}
             </div>
           </div>
         </div>
@@ -292,3 +296,17 @@ export default class BookActions extends Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  console.log(state.bookInfo);
+  return { bookInfo: state.bookInfo };
+};
+
+const mapDispatchToProps = dispatch => {
+  return { actions: bindActionCreators(bookInfoActions, dispatch) };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(BookActions);

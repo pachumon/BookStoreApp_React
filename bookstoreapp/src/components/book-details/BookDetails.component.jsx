@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Link, Route } from 'react-router-dom';
-import { InvokeHttp } from '../../httpUtils/AjaxGateway';
+import { Link } from 'react-router-dom';
 import { get } from 'lodash';
 import BookDetailsRow from './BookDetailsRow.component';
 import { connect } from 'react-redux';
@@ -17,11 +16,10 @@ class BookDetails extends Component {
   };
 
   render() {
-    const { bookInfo } = this.props;
-    console.log(bookInfo);
+    const { bookInfo } = this.props;    
     return (
       <div className="container-fluid">
-        {get(bookInfo.data, 'title') != undefined && (
+        {(get(bookInfo.data, 'id') != undefined && get(bookInfo.data, 'id') != 0) && (
           <div className="row">
             <div className="panel panel-primary">
               <div className="panel-heading">
@@ -53,7 +51,7 @@ class BookDetails extends Component {
   }
 }
 
-const mapStateToProps = (state, props) => {
+const mapStateToProps = (state) => {
   return { bookInfo: state.bookInfo };
 };
 
