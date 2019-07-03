@@ -1,5 +1,8 @@
 import actionTypes from '../constants/actionTypes';
 import initialState from './initialState';
+import * as R from 'ramda';
+
+const filterBookinfo = (filterId, book) => book.id !== filterId;
 
 const booksReducer = (state = initialState.books, action) => {
   switch (action.type) {
@@ -8,9 +11,10 @@ const booksReducer = (state = initialState.books, action) => {
     case actionTypes.LOAD_BOOKS_ERROR:
       return { ...state, errorInfo: action.errMessage };
     case actionTypes.REMOVE_BOOKINFO_SUCCESS: {
-      debugger;
-      var filteredBooks = state.data.filter(book => book.id !== action.bookId);
-      return { ...state, data: [...action.books] };
+      return {
+        ...state,
+        data: R.filter(R.curry(filterBookinfo)(action.bookId), state.data)
+      };
     }
     default:
       return state;

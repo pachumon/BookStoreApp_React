@@ -12,9 +12,7 @@ class Home extends Component {
   componentDidMount() {
     console.log(this);
     this.props.actions.loadBooks();
-  }
-
-  componentWillUpdate = (nextProps, nextState) => {};
+  } 
 
   removeBookInfo = bookID => {
     this.props.actions.removeBookInfo(bookID);
@@ -48,7 +46,7 @@ class Home extends Component {
   }
 }
 
-const mapStateToProps = (state, props) => {
+const mapStateToProps = (state, props) => {  
   return { books: state.books };
 };
 

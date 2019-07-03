@@ -33,7 +33,7 @@ const loadBooks = () => {
 };
 
 const removeBookInfo = bookId => {
-  console.log('invoked removeBookInfo');
+  console.log('invoked removeBookInfo');  
   return (dispatch, appState) => {
     InvokeHttp(
       { method: 'DELETE', url: `http://localhost:3600/books/${bookId}` },
