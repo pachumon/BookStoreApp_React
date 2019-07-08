@@ -4,76 +4,37 @@ import { get } from 'lodash';
 import { InvokeHttp } from '../../httpUtils/AjaxGateway';
 import { Formik, ErrorMessage } from 'formik';
 import { ToastContainer } from 'react-toastr';
+import { defaultBookInfo } from '../../reducers/defaultStateContainer';
 import * as Yup from 'yup';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as bookInfoActions from '../../actions/bookInfoActions';
 
 class BookActions extends Component {
-  defaultState = {
-    id: 0,
-    title: '',
-    author: '',
-    published: 2019,
-    category: ''
-  };
   container;
-
-  state = {
-    bookInfo: { ...this.defaultState }
-  };
 
   handleFormSubmit = (bookInfo, setSubmitting) => {
     let { id, ...postData } = bookInfo;
-    //console.log(bookInfo);
+    let { actions } = this.props;
     if (id === 0) {
-      //adding new book
-      InvokeHttp(
-        {
-          method: 'POST',
-          url: `http://localhost:3600/books`,
-          data: postData
-        },
-        () => {
-          setSubmitting(false);
-          this.container.success(`Book has been Created`, ``, {
-            closeButton: true
-          });
-        }
-      );
+      actions.handleBookInfoCreate(bookInfo, setSubmitting, this.container);
     } else {
-      //update existing book
-      InvokeHttp(
-        {
-          method: 'PUT',
-          url: `http://localhost:3600/books/${id}`,
-          data: postData
-        },
-        () => {
-          setSubmitting(false);
-          this.container.success(`Book has been Updated`, ``, {
-            closeButton: true
-          });
-        }
-      );
+      actions.handleBookInfoEdit(bookInfo, setSubmitting, this.container);
     }
   };
 
-  componentWillUpdate = () => {
-    console.log(this.props);
-  };
-
   componentDidMount = () => {
+    let { actions } = this.props;
     const bookId = get(this.props, 'match.params.bookId');
-    this.props.actions.clearStaleBookInfoData();
+    actions.clearStaleBookInfoData();
 
     if (bookId !== '0') {
-      this.props.actions.loadBookInfoAsync(bookId);
+      actions.loadBookInfoAsync(bookId);
     }
   };
 
   render() {
-    console.log(this.props);
+    console.log(this.props.actions);
     const { bookInfo } = this.props;
     return (
       <div className="container-fluid">
