@@ -9,13 +9,12 @@ import * as bookActions from '../../actions/booksActions';
 class Home extends Component {
   container;
 
-  componentDidMount() {
-    console.log(this);
+  componentDidMount() {    
     this.props.actions.loadBooks();
   } 
 
   removeBookInfo = bookID => {
-    this.props.actions.removeBookInfo(bookID);
+    this.props.actions.removeBookInfo(bookID,this.container);
   };
 
   render() {

@@ -33,8 +33,7 @@ class BookActions extends Component {
     }
   };
 
-  render() {
-    console.log(this.props.actions);
+  render() {    
     const { bookInfo } = this.props;
     return (
       <div className="container-fluid">
@@ -258,8 +257,7 @@ class BookActions extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  console.log(state.bookInfo);
+const mapStateToProps = state => {  
   return { bookInfo: state.bookInfo };
 };
 

@@ -32,12 +32,15 @@ const loadBooks = () => {
   };
 };
 
-const removeBookInfo = bookId => {
+const removeBookInfo = (bookId,container) => {
   console.log('invoked removeBookInfo');  
   return (dispatch, appState) => {
     InvokeHttp(
       { method: 'DELETE', url: `http://localhost:3600/books/${bookId}` },
       response => {
+        container.success(`Book has been Removed♠`, ``, {
+          closeButton: true
+        });
         dispatch(removeBookInfoSuccess(bookId));
       },
       err => {
