@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import HomeTable from './HomeTable.component';
-import { InvokeHttp } from '../../httpUtils/AjaxGateway';
+import { Link } from 'react-router-dom';
 import { ToastContainer } from 'react-toastr';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -28,10 +28,10 @@ class Home extends Component {
             className="toast-top-right"
           />
           <div className="row btncontainer">
-            <a href="/bookActions/0" className="btn btn-primary pull-right">
+            <Link to="/bookActions/0" className="btn btn-primary pull-right">
               Add Book
               <i className="fa fa-chevron-right ml10" />
-            </a>
+            </Link>
           </div>
           {books.data.length > 0 && (
             <HomeTable books={books.data} removeAction={this.removeBookInfo} />
@@ -45,7 +45,7 @@ class Home extends Component {
   }
 }
 
-const mapStateToProps = (state, props) => {  
+const mapStateToProps = (state) => {  
   return { books: state.books };
 };
 

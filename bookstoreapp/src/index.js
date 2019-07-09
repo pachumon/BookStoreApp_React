@@ -4,9 +4,10 @@ import './index.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'font-awesome/css/font-awesome.css';
 import App from './components/app/App.component';
-import configureStore from './store/configureStore';
+import { configureStore, history } from './store/configureStore';
 import initialState from './reducers/initialState';
 import { Provider } from 'react-redux';
+import { ConnectedRouter } from 'connected-react-router';
 //import { loadBooks, loadBooksAsync } from './actions/booksActions';
 
 var store = configureStore(initialState);
@@ -15,7 +16,9 @@ var store = configureStore(initialState);
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <ConnectedRouter history={history}>
+      <App history={history} />
+    </ConnectedRouter>
   </Provider>,
   document.getElementById('root')
 );

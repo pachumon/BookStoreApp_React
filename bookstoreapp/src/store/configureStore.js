@@ -2,6 +2,10 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import rootReducer from '../reducers';
 import invariant from 'redux-immutable-state-invariant';
 import thunk from 'redux-thunk';
+import { createBrowserHistory } from 'history';
+import { routerMiddleware } from 'connected-react-router';
+
+const history = createBrowserHistory();
 
 const configureStore = initialState => {
   const composeEnhancers =
@@ -13,12 +17,14 @@ const configureStore = initialState => {
     compose;
 
   const store = createStore(
-    rootReducer,
+    rootReducer(history),
     initialState,
-    composeEnhancers(applyMiddleware(thunk, invariant()))
+    composeEnhancers(
+      applyMiddleware(routerMiddleware(history), thunk, invariant())
+    )
   );
 
   return store;
 };
 
-export default configureStore;
+export { configureStore, history };
