@@ -34,20 +34,6 @@
       "author": "Charles Dickens",
       "published": 1943,
       "category": "Historical Fiction"
-    },
-    {
-      "title": "sample1",
-      "author": "author1",
-      "published": "2019",
-      "category": "category1",
-      "id": 6
-    },
-    {
-      "title": "sample2",
-      "author": "author2",
-      "published": "2019",
-      "category": "category2",
-      "id": 7
     }
   ]
 }

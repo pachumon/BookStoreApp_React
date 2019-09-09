@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "bootstrap": "^3.3.7",
+    "bootstrap": "^3.4.1",
     "concurrently": "^4.1.0",
     "connected-react-router": "^6.5.0",
     "font-awesome": "^4.7.0",
@@ -11,7 +11,7 @@
     "history": "^4.9.0",
     "jquery": "^3.4.1",
     "json-server": "^0.15.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "ramda": "^0.26.1",
     "react": "^16.8.6",
