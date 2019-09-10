@@ -5,7 +5,7 @@ import BookActions from '../book-actions/BookActions.components';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import './App.css';
 
-function App() {
+const App = () => {
   return (
     <Router>
       <nav className="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -56,6 +56,6 @@ function App() {
       </div>
     </Router>
   );
-}
+};
 
 export default App;
