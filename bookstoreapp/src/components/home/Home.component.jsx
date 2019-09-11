@@ -3,21 +3,26 @@ import HomeTable from './HomeTable.component';
 import { InvokeHttp } from '../../httpUtils/AjaxGateway';
 import { ToastContainer } from 'react-toastr';
 import { curry } from 'lodash';
+import DataLoader from '../common/DataLoader.component';
 
-const loadBookData = SetBooks => {
-  InvokeHttp({ method: 'GET', url: `http://localhost:3600/books` }, response =>
-    SetBooks([...response])
+const loadBookData = (SetBooks, SetLoading) => {
+  InvokeHttp(
+    { method: 'GET', url: `http://localhost:3600/books` },
+    response => {
+      SetBooks([...response]);
+      SetLoading(false);
+    }
   );
 };
 //this function is curried to avoid passing container & SetBooks reference down the hierarchy
-const removeBookInfo = curry((container, SetBooks, bookID) => {
+const removeBookInfo = curry((container, SetBooks, SetLoading, bookID) => {
   InvokeHttp(
     {
       method: 'DELETE',
       url: `http://localhost:3600/books/${bookID}`
     },
-    response => {
-      loadBookData(SetBooks);
+    response => {      
+      loadBookData(SetBooks,SetLoading);
       container.current.success(`Book has been Removed`, ``, {
         closeButton: true
       });
@@ -27,19 +32,20 @@ const removeBookInfo = curry((container, SetBooks, bookID) => {
 
 const useHomeComponentHandler = () => {
   const [Books, SetBooks] = useState([]);
+  const [Loading, SetLoading] = useState(true);
+
   useEffect(() => {
-    loadBookData(SetBooks);
+    loadBookData(SetBooks, SetLoading);
   }, []);
-  return { Books, SetBooks };
+  return { Books, SetBooks, Loading, SetLoading };
 };
 
 const Home = () => {
   const container = useRef(null);
-  const { Books, SetBooks } = useHomeComponentHandler();
+  const { Books, SetBooks, Loading, SetLoading } = useHomeComponentHandler();
 
   return (
     <>
-      {console.log(Books.length)}
       <div className="container-fluid">
         <ToastContainer ref={container} className="toast-top-right" />
         <div className="row btncontainer">
@@ -48,12 +54,18 @@ const Home = () => {
             <i className="fa fa-chevron-right ml10" />
           </a>
         </div>
-        {Books.length > 0 && (
-          <HomeTable
-            books={Books}
-            removeAction={removeBookInfo(container, SetBooks)}
-          />
-        )}
+        <DataLoader isLoading={Loading}>
+          {dataLoaderProps => {
+            if (Books.length > 0) {
+              return (
+                <HomeTable
+                  books={Books}
+                  removeAction={removeBookInfo(container, SetBooks, SetLoading)}
+                />
+              );
+            }
+          }}
+        </DataLoader>
       </div>
     </>
   );
